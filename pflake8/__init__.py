@@ -10,7 +10,7 @@ import flake8.options.config
 import toml
 
 
-class DivertingConfigParser(configparser.RawConfigParser):
+class ConfigParserTomlMixin:
     def _read(self, fp, filename):
         filename_path = Path(filename)
         if filename_path.suffix == '.toml':
@@ -23,7 +23,19 @@ class DivertingConfigParser(configparser.RawConfigParser):
             for key, value in section_to_copy.items():
                 self._sections[key] = self._dict(value)
         else:
-            super(DivertingConfigParser, self)._read(fp, filename)
+            super(ConfigParserTomlMixin, self)._read(fp, filename)
+
+
+class DivertingRawConfigParser(ConfigParserTomlMixin, configparser.RawConfigParser):
+    pass
+
+
+class DivertingConfigParser(ConfigParserTomlMixin, configparser.ConfigParser):
+    pass
+
+
+class DivertingSafeConfigParser(ConfigParserTomlMixin, configparser.SafeConfigParser):
+    pass
 
 
 class ModifiedConfigFileFinder(flake8.options.config.ConfigFileFinder):
@@ -32,7 +44,9 @@ class ModifiedConfigFileFinder(flake8.options.config.ConfigFileFinder):
         self.project_filenames = self.project_filenames + ('pyproject.toml',)
 
 
-configparser.RawConfigParser = DivertingConfigParser
+configparser.RawConfigParser = DivertingRawConfigParser
+configparser.ConfigParser = DivertingConfigParser
+configparser.SafeConfigParser = DivertingSafeConfigParser
 flake8.options.config.ConfigFileFinder = ModifiedConfigFileFinder
 
 main = flake8.main.cli.main
