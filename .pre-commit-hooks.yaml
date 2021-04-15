@@ -1,7 +1,7 @@
 -   id: pyproject-flake8
     name: pyproject-flake8
-    description: '`pyproject-flake8` is a variant of `flake8` with support for configuration in the `pyproject.toml` file.'
-    entry: flake8
+    description: 'pyproject-flake8 (`pflake8`), a monkey patching wrapper to connect flake8 with pyproject.toml configuration'
+    entry: pflake8
     language: python
     types: [python]
     require_serial: true
