@@ -25,6 +25,12 @@ class ConfigParserTomlMixin:
         else:
             super(ConfigParserTomlMixin, self)._read(fp, filename)
 
+    def _convert_to_boolean(self, value):
+        if isinstance(value, bool):
+            return value
+        else:
+            return super()._convert_to_boolean(value)
+
 
 class DivertingRawConfigParser(ConfigParserTomlMixin, configparser.RawConfigParser):
     pass
