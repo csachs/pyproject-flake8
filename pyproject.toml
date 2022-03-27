@@ -2,23 +2,26 @@
 requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
-[tool.flit.metadata]
-module = "pflake8"
-dist-name = "pyproject-flake8"
-author = "Christian Sachs"
-author-email = "sachs.christian@gmail.com"
-home-page = "https://github.com/csachs/pyproject-flake8"
-description-file = "README.md"
-license = "Unlicense"
-requires = [
+[project]
+dynamic = ["version", "description"]
+name = "pyproject-flake8"
+authors = [{name = "Christian Sachs", email = "sachs.christian@gmail.com"}]
+readme = "README.md"
+license = { file = "LICENSE" } 
+classifiers = []
+dependencies = [
     "tomli; python_version < '3.11.0a7'",
     "flake8"
 ]
-classifiers = [
-]
 
-[tool.flit.scripts]
+[project.urls]
+Home = "https://github.com/csachs/pyproject-flake8"
+
+[project.scripts]
 pflake8 = "pflake8.__main__:main"
+
+[tool.flit.module]
+name = "pflake8"
 
 [tool.black]
 skip-string-normalization = 1
