@@ -7,7 +7,12 @@ from pathlib import Path
 
 import flake8.main.cli
 import flake8.options.config
-import toml
+
+try:
+    # from Python 3.11 onward
+    from tomllib import load as toml_load
+except ImportError:
+    from tomli import load as toml_load
 
 
 class ConfigParserTomlMixin:
@@ -16,9 +21,11 @@ class ConfigParserTomlMixin:
         if filename_path.suffix == '.toml':
             is_pyproject = filename_path.name == 'pyproject.toml'
 
-            toml_config = toml.load(fp)
+            toml_config = toml_load(fp.buffer)
 
-            section_to_copy = toml_config if not is_pyproject else toml_config.get('tool', [])
+            section_to_copy = (
+                toml_config if not is_pyproject else toml_config.get('tool', [])
+            )
 
             for key, value in section_to_copy.items():
                 self._sections[key] = self._dict(value)

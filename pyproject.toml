@@ -11,7 +11,7 @@ home-page = "https://github.com/csachs/pyproject-flake8"
 description-file = "README.md"
 license = "Unlicense"
 requires = [
-    "toml",
+    "tomli; python_version < '3.11.0a7'",
     "flake8"
 ]
 classifiers = [
