@@ -10,7 +10,7 @@ readme = "README.md"
 license = { file = "LICENSE" } 
 classifiers = []
 dependencies = [
-    "tomli; python_version < '3.11.0a7'",
+    "tomli; python_version < '3.11'",
     "flake8"
 ]
 
