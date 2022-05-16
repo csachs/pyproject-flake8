@@ -42,7 +42,7 @@ Configuration goes into the `tool.flake8` section of `pyproject.toml`:
 ```toml
 [tool.flake8]
 max-line-length = 88
-extend-ignore = "E203,"
+extend-ignore = ["E203"]
 max-complexity = 10
 ```
 
