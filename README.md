@@ -30,7 +30,7 @@ Use your favorite [PEP517](https://www.python.org/dev/peps/pep-0517/) compliant 
 ```bash
 # install first via: pip install build
 python -m build
-# packges will reside in dist/
+# packages will reside in dist/
 ```
 
 ## Usage
