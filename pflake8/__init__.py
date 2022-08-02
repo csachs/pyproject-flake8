@@ -30,9 +30,9 @@ class ConfigParserTomlMixin:
             return toml_config.get('tool', {})
 
     def copy_section_data(self, section_data):
-        for key, value in section_data.items():
-            self.add_section(key)
-            self._sections[key] = self._dict(value)
+        for section, config in section_data.items():
+            self.add_section(section)
+            self._sections[section] = self._dict(config)
 
     def _read(self, fp, filename):
         path = Path(filename)
