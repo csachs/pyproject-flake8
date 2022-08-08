@@ -32,5 +32,5 @@ multi_line_output = 3
 
 [tool.flake8]
 max-line-length = 88
-extend-ignore = "E203,"
+extend-ignore = ["E203"]
 max-complexity = 10

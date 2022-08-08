@@ -53,7 +53,7 @@ Two other projects aim to address the same problem:
 - [flake9](https://gitlab.com/retnikt/flake9)
 - [FlakeHell](https://github.com/life4/flakehell)
 
-Both seem to try to do a lot more than just getting `pyproject.toml` support. `pyproject-flake8` tries to stay minimal while solving its task (with currently around 40 lines). 
+Both seem to try to do a lot more than just getting `pyproject.toml` support. `pyproject-flake8` tries to stay minimal while solving its task. 
 
 ## Caveat
 
