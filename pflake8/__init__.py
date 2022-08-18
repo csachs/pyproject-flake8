@@ -24,7 +24,7 @@ class ConfigParserTomlMixin:
             toml_config = toml_load(fp.buffer)
 
             section_to_copy = (
-                toml_config if not is_pyproject else toml_config.get('tool', [])
+                toml_config if not is_pyproject else toml_config.get('tool', {})
             )
 
             for key, value in section_to_copy.items():
