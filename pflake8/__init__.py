@@ -62,13 +62,21 @@ configparser.SafeConfigParser = DivertingSafeConfigParser
 
 class FixFilenames(ast.NodeTransformer):
     tuple_of_interest = ("setup.cfg", "tox.ini", ".flake8")
+
+    modern = sys.version_info[0] >= 3 and sys.version_info[1] > 7
+
+    inner_type = ast.Constant if modern else ast.Str
+    inner_type_field = "value" if modern else "s"
+
     fix_applied = False
 
     def visit_Tuple(self, node: ast.Tuple) -> ast.Tuple:
-        if all(isinstance(el, ast.Constant) for el in node.elts) and set(
+        if all(isinstance(el, self.inner_type) for el in node.elts) and set(
             self.tuple_of_interest
-        ) == {el.value for el in node.elts}:
-            node.elts.append(ast.Constant(value="pyproject.toml"))
+        ) == {getattr(el, self.inner_type_field) for el in node.elts}:
+            node.elts.append(
+                self.inner_type(**{self.inner_type_field: "pyproject.toml"})
+            )
             ast.fix_missing_locations(node)
             self.fix_applied = True
         return node
@@ -80,7 +88,6 @@ class FixFilenames(ast.NodeTransformer):
         original_ast = ast.parse(
             Path(filename).read_text(encoding='UTF-8'), filename=filename
         )
-
         transformer = cls()
         fixed_ast = transformer.visit(original_ast)
 
