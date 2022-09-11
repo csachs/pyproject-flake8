@@ -1,0 +1,24 @@
+name: flake8 version check
+
+on:
+  schedule:
+    # run the action always at 1:11 UTC (i.e. 3:11 CEST)
+    - cron:  '11 1 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-versions: [3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install requests
+      - name: Perform flake8 version check
+        run: |
+          python .github/workflows/maintenance.py check

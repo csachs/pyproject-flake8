@@ -2,6 +2,23 @@
 
 A monkey patching wrapper to connect flake8 with `pyproject.toml` configuration.
 
+## Update concerning versioning:
+
+pyproject-flake8 so far came without explicit pinning of a flake8 version. Since a [recent update](https://github.com/csachs/pyproject-flake8/issues/13) broke compatibility – not unexpectedly – the issue arose, how to handle incompatible versions of flake8 and pyproject-flake8.
+Since there are good reasons for and against version pinning, this project now tries to follow a mix of both:
+Release versions will follow and pin identical flake8 versions, alpha versions (specific to pyproject-flake8) will pin to the similar non-alpha version of flake8, *or later*.
+That way, users of pyproject-flake8 can decide, whether they want a fixed version known to work, or a minimum version, getting later versions, at the risk of future breakage.
+
+Versions 0.0.1x are pyproject-flake8 internal versions and do not correspond to flake8. Furthermore, flake8 3.8.0 was chosen as the first flake8 version to mirror this way.
+
+**tl;dr:**
+
+```bash
+# e.g., suggested installation / dependency ... depending on flake8==5.0.3
+
+pip install pyproject-flake8==5.0.3
+```
+
 ## Rationale
 
 [`flake8`](https://flake8.pycqa.org/) is one of the most popular Python linters, `pyproject.toml` has become the [standard](https://www.python.org/dev/peps/pep-0518/) for Python project metadata.
