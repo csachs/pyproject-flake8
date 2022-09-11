@@ -1,6 +1,6 @@
 """ pyproject-flake8 (`pflake8`), a monkey patching wrapper to connect flake8 with pyproject.toml configuration """  # noqa
 
-__version__ = '0.0.1a5'
+__version__ = '3.8.0'
 
 import configparser
 from pathlib import Path
