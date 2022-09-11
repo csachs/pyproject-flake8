@@ -2,7 +2,10 @@
 
 __version__ = '4.0.1a1'
 
+import ast
 import configparser
+import sys
+from types import ModuleType
 from pathlib import Path
 
 import flake8.main.cli
@@ -27,8 +30,9 @@ class ConfigParserTomlMixin:
                 toml_config if not is_pyproject else toml_config.get('tool', {})
             )
 
-            for key, value in section_to_copy.items():
-                self._sections[key] = self._dict(value)
+            for section, config in section_to_copy.items():
+                self.add_section(section)
+                self._sections[section] = self._dict(config)
         else:
             super(ConfigParserTomlMixin, self)._read(fp, filename)
 
@@ -51,16 +55,47 @@ class DivertingSafeConfigParser(ConfigParserTomlMixin, configparser.SafeConfigPa
     pass
 
 
-class ModifiedConfigFileFinder(flake8.options.config.ConfigFileFinder):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.project_filenames = self.project_filenames + ('pyproject.toml',)
-
-
 configparser.RawConfigParser = DivertingRawConfigParser
 configparser.ConfigParser = DivertingConfigParser
 configparser.SafeConfigParser = DivertingSafeConfigParser
-flake8.options.config.ConfigFileFinder = ModifiedConfigFileFinder
+
+
+class FixFilenames(ast.NodeTransformer):
+    tuple_of_interest = ("setup.cfg", "tox.ini", ".flake8")
+    fix_applied = False
+
+    def visit_Tuple(self, node: ast.Tuple) -> ast.Tuple:
+        if all(isinstance(el, ast.Constant) for el in node.elts) and set(
+            self.tuple_of_interest
+        ) == {el.value for el in node.elts}:
+            node.elts.append(ast.Constant(value="pyproject.toml"))
+            ast.fix_missing_locations(node)
+            self.fix_applied = True
+        return node
+
+    @classmethod
+    def apply(cls, module: ModuleType = flake8.options.config) -> None:
+        filename = module.__file__
+
+        original_ast = ast.parse(
+            Path(filename).read_text(encoding='UTF-8'), filename=filename
+        )
+
+        transformer = cls()
+        fixed_ast = transformer.visit(original_ast)
+
+        if not transformer.fix_applied:
+            print(
+                "[pflake8] Warning: Failed applying patch for pyproject.toml parsing.",
+                file=sys.stderr,
+            )
+
+        compiled = compile(fixed_ast, filename=filename, mode="exec")
+        exec(compiled, module.__dict__)
+
+
+FixFilenames.apply()
+
 
 main = flake8.main.cli.main
 
