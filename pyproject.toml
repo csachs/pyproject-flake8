@@ -11,7 +11,7 @@ license = { file = "LICENSE" }
 classifiers = []
 dependencies = [
     "tomli; python_version < '3.11'",
-    "flake8 >= 3.9.0"
+    "flake8 == 3.9.1"
 ]
 
 [project.urls]
