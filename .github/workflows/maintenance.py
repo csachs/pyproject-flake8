@@ -141,8 +141,20 @@ def command_check():
         return 0
 
 
-def command_bump(target_version, alpha=False):
-    target_version_pflake8 = target_version if not alpha else f"{target_version}a1"
+def str2bool(value: Union[bool, str]) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value.lower() in ('y', 't', 'yes', 'true'):
+        return True
+    return False
+
+
+def command_bump(target_version, alpha=False, post=None):
+    alpha = str2bool(alpha)
+    suffix = "" if post is None else f".post{int(post)}"
+    target_version_pflake8 = (
+        target_version if not alpha else f"{target_version}a1"
+    ) + suffix
 
     flake8_versions, pflake8_versions = get_flake8_versions(), get_pflake8_versions()
 
