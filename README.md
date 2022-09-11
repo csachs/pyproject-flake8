@@ -14,9 +14,13 @@ Versions 0.0.1x are pyproject-flake8 internal versions and do not correspond to 
 **tl;dr:**
 
 ```bash
-# e.g., suggested installation / dependency ... depending on flake8==5.0.3
+# e.g., suggested installation / dependency ... depending on flake8==5.0.4
 
-pip install pyproject-flake8==5.0.3
+# for Python 3.8+
+pip install pyproject-flake8==5.0.4
+
+# for Python 3.6+
+pip install pyproject-flake8==5.0.4.post1
 ```
 
 ## Rationale
