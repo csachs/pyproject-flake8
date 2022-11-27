@@ -76,6 +76,9 @@ Two other projects aim to address the same problem:
 
 Both seem to try to do a lot more than just getting `pyproject.toml` support. `pyproject-flake8` tries to stay minimal while solving its task. 
 
+[`flake8-pyproject`](https://github.com/john-hen/Flake8-pyproject) adds only `pyproject.toml` support, and does this as a Flake8 plugin, allowing
+the original `flake8` command to work (rather than using `pflake8`).
+
 ## Caveat
 
 This script monkey-patches flake8 and the configparser library of Python, therefore loading it as a module may have unforeseen consequences.
