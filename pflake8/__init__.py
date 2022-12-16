@@ -4,9 +4,10 @@ __version__ = '6.0.0'
 
 import ast
 import configparser
+import multiprocessing.pool
 import sys
-from types import ModuleType
 from pathlib import Path
+from types import ModuleType
 
 import flake8.main.cli
 import flake8.options.config
@@ -103,6 +104,35 @@ class FixFilenames(ast.NodeTransformer):
 
 FixFilenames.apply()
 
+
+def _pool_init(real, *args, **kwargs):
+    # by having the multiprocessing Pool load this function
+    # the monkeypatches are loaded as well
+    return real(*args, **kwargs)
+
+
+class PatchingPool(multiprocessing.pool.Pool):
+    def __init__(
+        self,
+        processes=None,
+        initializer=None,
+        initargs=(),
+        maxtasksperchild=None,
+        context=None,
+        **kwargs
+    ):
+        super().__init__(
+            processes=processes,
+            initializer=_pool_init,
+            initargs=(initializer,) + initargs,
+            maxtasksperchild=maxtasksperchild,
+            context=context,
+            **kwargs
+        )
+
+
+if multiprocessing.get_start_method() == "spawn":
+    multiprocessing.pool.Pool = PatchingPool
 
 main = flake8.main.cli.main
 
