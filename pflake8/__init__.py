@@ -32,8 +32,11 @@ class ConfigParserTomlMixin:
             )
 
             for section, config in section_to_copy.items():
-                self.add_section(section)
-                self._sections[section] = self._dict(config)
+                try:
+                    self.add_section(section)
+                except (configparser.DuplicateSectionError):
+                    pass
+                self._sections.setdefault(section, self._dict()).update(self._dict(config))
         else:
             super(ConfigParserTomlMixin, self)._read(fp, filename)
 
