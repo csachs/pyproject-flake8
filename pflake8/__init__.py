@@ -52,13 +52,8 @@ class DivertingConfigParser(ConfigParserTomlMixin, configparser.ConfigParser):
     pass
 
 
-class DivertingSafeConfigParser(ConfigParserTomlMixin, configparser.SafeConfigParser):
-    pass
-
-
 configparser.RawConfigParser = DivertingRawConfigParser
 configparser.ConfigParser = DivertingConfigParser
-configparser.SafeConfigParser = DivertingSafeConfigParser
 
 
 class FixFilenames(ast.NodeTransformer):
