@@ -26,6 +26,9 @@ name = "pflake8"
 
 [tool.black]
 skip-string-normalization = 1
+force-exclude = [
+    "test/data/dummy.py",
+]
 
 [tool.isort]
 profile = "black"
