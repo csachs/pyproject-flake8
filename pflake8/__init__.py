@@ -32,8 +32,11 @@ class ConfigParserTomlMixin:
             )
 
             for section, config in section_to_copy.items():
-                self.add_section(section)
-                self._sections[section] = self._dict(config)
+                try:
+                    self.add_section(section)
+                except (configparser.DuplicateSectionError):
+                    pass
+                self._sections.setdefault(section, self._dict()).update(self._dict(config))
         else:
             super(ConfigParserTomlMixin, self)._read(fp, filename)
 
@@ -52,13 +55,20 @@ class DivertingConfigParser(ConfigParserTomlMixin, configparser.ConfigParser):
     pass
 
 
-class DivertingSafeConfigParser(ConfigParserTomlMixin, configparser.SafeConfigParser):
-    pass
+try:
+
+    class DivertingSafeConfigParser(
+        ConfigParserTomlMixin, configparser.SafeConfigParser
+    ):
+        pass
+
+    configparser.SafeConfigParser = DivertingSafeConfigParser
+except AttributeError:
+    pass  # does not exist on Python 3.12 (https://github.com/python/cpython/issues/89336#issuecomment-1094366625)
 
 
 configparser.RawConfigParser = DivertingRawConfigParser
 configparser.ConfigParser = DivertingConfigParser
-configparser.SafeConfigParser = DivertingSafeConfigParser
 
 
 class FixFilenames(ast.NodeTransformer):

@@ -1,0 +1,2 @@
+[tool.flake8]
+extend-ignore = ["E203"]
